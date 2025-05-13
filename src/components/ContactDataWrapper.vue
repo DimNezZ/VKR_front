@@ -15,18 +15,19 @@ defineProps({
 
 <style scoped>
 .wrapper {
-  background-color: #f8f9fa;
-  border-radius: 5px;
+  background-color: var(--color-alabaster);
+  border-radius: var(--control-border-radius);
 }
 .text {
-  padding: 10px 20px;
-  font-size: 16px;
+  padding: var(--medium-padding-x) var(--large-padding-y);
+  font-size: var(--medium-font-size);
+  color: var(--color-black);
   text-align: center;
 }
 @media (max-width: 768px) {
   .text {
-    padding: 5px 10px;
-    font-size: 14px;
+    padding: var(--small-padding-x) var(--medium-padding-y);
+    font-size: var(--small-font-size);
   }
 }
 </style>

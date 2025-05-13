@@ -56,19 +56,19 @@ const navigation_blocks = reactive([
   flex-direction: column;
   gap: 8px;
   width: 360px;
-  padding: 10px;
-  background-color: #389dff;
-  border-radius: 5px;
+  padding: var(--medium-padding-x) var(--medium-padding-y);
+  background-color: var(--color-blue-primary);
+  border-radius: var(--control-border-radius);
 }
 .title_container {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: #ffffff;
+  color: var(--color-white);
   cursor: pointer;
 }
 .menu_title {
-  font-size: 22px;
+  font-size: var(--large-font-size);
   font-weight: 800;
 }
 .menu_button img {
@@ -84,21 +84,22 @@ const navigation_blocks = reactive([
   display: flex;
   flex-direction: column;
   gap: 10px;
-  color: #201f20;
+  color: var(--color-black);
   overflow: hidden;
 }
 .menu_item {
   display: flex;
   flex-direction: column;
   text-align: center;
-  background-color: #ffffff;
-  border-radius: 5px;
+  background-color: var(--color-alabaster);
+  border-radius: var(--control-border-radius);
+  box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 0.25);
 }
 .item_name {
-  font-size: 16px;
+  font-size: var(--medium-font-size);
 }
 .item_description {
-  font-size: 14px;
+  font-size: var(--small-font-size);
 }
 .roll_up-enter-active,
 .roll_up-leave-active {
@@ -120,7 +121,7 @@ const navigation_blocks = reactive([
     width: 330px;
   }
   .menu_title {
-    font-size: 18px;
+    font-size: var(--big-font-size);
   }
   .menu_button img {
     width: 26px;
@@ -132,7 +133,7 @@ const navigation_blocks = reactive([
     width: 330px;
   }
   .item_name {
-    font-size: 14px;
+    font-size: var(--small-font-size);
   }
   .menu_button img {
     width: 24px;

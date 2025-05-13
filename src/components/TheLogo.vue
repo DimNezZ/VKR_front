@@ -20,14 +20,15 @@ defineProps({
 
 <style scoped>
 .logo_wrapper {
-  border-radius: 5px;
-  background-color: #f8f9fa;
+  border-radius: var(--control-border-radius);
+  background-color: var(--color-alabaster);
 }
 .logo {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 10px 35px;
+  padding: var(--medium-padding-x) 35px;
+  color: var(--color-black);
 }
 .image_container {
   min-width: 60px;
@@ -41,19 +42,18 @@ defineProps({
   height: 100%;
 }
 .logo_title {
-  font-size: 32px;
+  font-size: var(--logo-font-size);
   font-weight: 800;
-  color: #201f20;
 }
 .copyright {
-  padding: 0 10px;
-  font-size: 18px;
+  padding: 0 var(--medium-padding-y);
+  font-size: var(--big-font-size);
   text-align: center;
 }
 
 @media (max-width: 768px) {
   .logo {
-    padding: 5px 10px;
+    padding: var(--small-padding-x) var(--medium-padding-y);
   }
   .image_container {
     min-width: 40px;
@@ -62,11 +62,10 @@ defineProps({
     max-height: 60px;
   }
   .logo_title {
-    font-size: 22px;
+    font-size: var(--large-font-size);
   }
   .copyright {
-    padding: 0 5px;
-    font-size: 14px;
+    font-size: var(--small-font-size);
   }
 }
 
@@ -74,29 +73,8 @@ defineProps({
   .logo_wrapper {
     max-width: 66%;
   }
-  .logo {
-    display: flex;
-    align-items: center;
-    padding: 5px 10px;
-  }
-  .image_container {
-    width: 40px;
-    height: 40px;
-    margin-right: 10px;
-  }
-  .image_container img {
-    width: 100%;
-    height: 100%;
-  }
   .logo_title {
-    font-size: 18px;
-    font-weight: 800;
-    color: #201f20;
-  }
-  .copyright {
-    padding: 0 10px;
-    font-size: 14px;
-    text-align: center;
+    font-size: var(--big-font-size);
   }
 }
 </style>

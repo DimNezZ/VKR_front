@@ -12,7 +12,7 @@ import TheLogo from '../TheLogo.vue'
 .header_wrapper {
   display: flex;
   justify-content: center;
-  background-color: #0070ba;
-  padding: 10px 0;
+  background-color: var(--color-blue-secondary);
+  padding: var(--medium-padding-x) 0;
 }
 </style>

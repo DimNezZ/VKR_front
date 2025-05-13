@@ -24,17 +24,14 @@
 <script setup>
 import ContactDataWrapper from '../ContactDataWrapper.vue'
 import TheLogo from '../TheLogo.vue'
-// import { useMediaQuery } from '@vueuse/core'
-
-// const isMobile = useMediaQuery('(max-width: 768px)')
 </script>
 
 <style scoped>
 .footer_wrapper {
   display: flex;
   align-items: center;
-  background-color: #0070ba;
-  padding: 20px 30px;
+  background-color: var(--color-blue-secondary);
+  padding: var(--large-padding-x) 30px;
 }
 
 .left_column {
@@ -62,93 +59,41 @@ import TheLogo from '../TheLogo.vue'
 
 @media (max-width: 1480px) {
   .footer_wrapper {
-    padding: 20px 20px;
+    padding: var(--large-padding-x) var(--large-padding-y);
     gap: 10px;
   }
   .left_column {
-    display: flex;
     width: 33.3%;
-    justify-content: left;
   }
   .right_column {
-    display: flex;
     width: 33.3%;
-    justify-content: right;
   }
   .center_column {
-    display: flex;
     width: auto;
-    justify-content: center;
   }
   .field_container {
-    display: flex;
     flex-direction: column;
-    justify-content: center;
-    gap: 25px;
   }
 }
 
 @media (max-width: 768px) {
   .footer_wrapper {
-    display: flex;
-    align-items: center;
-    background-color: #0070ba;
-    padding: 20px 10px;
-    gap: 10px;
-  }
-
-  .left_column {
-    display: flex;
-    width: auto;
-    justify-content: left;
-  }
-  .right_column {
-    display: flex;
-    width: auto;
-    justify-content: right;
-  }
-  .center_column {
-    display: flex;
-    width: auto;
-    justify-content: center;
-  }
-
-  .field_container {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
+    padding: var(--large-padding-x) var(--medium-padding-y);
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 560px) {
   .footer_wrapper {
-    display: flex;
     flex-direction: column;
-    align-items: center;
-    background-color: #0070ba;
-    padding: 10px 0;
-    gap: 10px;
+    padding: var(--medium-padding-x) 0;
   }
-
   .left_column {
-    display: flex;
     width: auto;
-    justify-content: left;
   }
   .right_column {
-    display: flex;
     width: auto;
-    justify-content: right;
   }
-  .center_column {
-    display: flex;
-    width: auto;
-    justify-content: center;
-  }
-
   .field_container {
-    display: flex;
-    justify-content: center;
     gap: 5px;
   }
 }

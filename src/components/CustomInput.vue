@@ -10,11 +10,14 @@
       :disabled="variant === 'unavailable'"
       class="input_text"
       :class="{ input_unavailable: props.variant === 'unavailable' }"
+      @input="emit('input', $event)"
     />
   </div>
 </template>
-<!-- Стоит ли делать недоступной так       :disabled="variant === 'unavailable'" -->
+
 <script setup>
+const emit = defineEmits(['input'])
+
 const props = defineProps({
   id: {
     type: String,
@@ -49,29 +52,31 @@ const props = defineProps({
 
 <style scoped>
 .form_input {
+  --input-color-unavailable: var(--color-silver);
+
   display: flex;
   flex-direction: column;
   gap: 8px;
   width: 230px;
-  color: #201f20;
+  color: var(--color-black);
+  font-size: var(--small-font-size);
 }
 .input_text {
   width: 180px;
-  border-radius: 5px;
-  border: 2px solid #389ddf;
-  padding: 10px;
-  font-size: 14px;
+  border-radius: var(--control-border-radius);
+  border: var(--small-border);
+  padding: var(--medium-padding-x) var(--medium-padding-y);
+  transition: 0.2s;
 }
 .input_label {
-  font-size: 14px;
   word-break: break-word;
 }
 .input_unavailable {
-  border-color: #c6c6c5;
-  color: #c6c6c5;
+  border-color: var(--input-color-unavailable);
+  color: var(--input-color-unavailable);
 }
 .input_text:focus {
   outline: none;
-  border-color: #0070ba;
+  border-color: var(--color-blue-secondary);
 }
 </style>

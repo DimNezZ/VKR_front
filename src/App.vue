@@ -1,9 +1,13 @@
 <template>
   <TheHeader></TheHeader>
   <div class="test">
-    <!-- <div class="navcon">
-      <NavigationMenu></NavigationMenu>
-    </div> -->
+    <NavigationMenu></NavigationMenu>
+    <FormWrapper
+      ><InputGroup variant="bordered">
+        <CustomInput label="asdasd"></CustomInput>
+        <CustomInput label="asdaasdasdasdsd"></CustomInput>
+        <CustomInput label="asdasadasasdassddasdsd"></CustomInput> </InputGroup
+    ></FormWrapper>
   </div>
   <TheFooter></TheFooter>
 </template>
@@ -11,6 +15,9 @@
 <script setup>
 import TheFooter from './components/blocks/TheFooter.vue'
 import TheHeader from './components/blocks/TheHeader.vue'
+import FormWrapper from './components/FormWrapper.vue'
+import InputGroup from './components/InputGroup.vue'
+import CustomInput from './components/CustomInput.vue'
 import NavigationMenu from './components/NavigationMenu.vue'
 </script>
 
@@ -23,12 +30,6 @@ import NavigationMenu from './components/NavigationMenu.vue'
   margin: 0 auto;
   max-width: 1160px;
   padding: 40px 10px;
-}
-.navcon {
-  display: flex;
-  justify-content: space-between;
-  gap: 30px;
-  flex-wrap: wrap;
 }
 /* @media (min-width: 1024px) {
   header {
