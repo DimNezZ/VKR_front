@@ -1,6 +1,8 @@
 <template>
   <div class="header_wrapper">
-    <TheLogo></TheLogo>
+    <RouterLink to="/" class="link">
+      <TheLogo></TheLogo>
+    </RouterLink>
   </div>
 </template>
 
@@ -14,5 +16,9 @@ import TheLogo from '../TheLogo.vue'
   justify-content: center;
   background-color: var(--color-blue-secondary);
   padding: var(--medium-padding-x) 0;
+}
+.link:focus-visible {
+  outline: 4px solid rgb(255 255 255 / 50%);
+  border-radius: var(--control-border-radius);
 }
 </style>

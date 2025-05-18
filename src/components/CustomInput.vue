@@ -9,7 +9,7 @@
       :value="value"
       :disabled="variant === 'unavailable'"
       class="input_text"
-      :class="{ input_unavailable: props.variant === 'unavailable' }"
+      :class="{ input_unavailable: variant === 'unavailable' }"
       @input="emit('input', $event)"
     />
   </div>
@@ -18,7 +18,7 @@
 <script setup>
 const emit = defineEmits(['input'])
 
-const props = defineProps({
+defineProps({
   id: {
     type: String,
     default: undefined,
@@ -33,7 +33,7 @@ const props = defineProps({
   },
   type: {
     type: String,
-    default: 'text',
+    default: 'number',
   },
   placeholder: {
     type: String,
@@ -78,5 +78,10 @@ const props = defineProps({
 .input_text:focus {
   outline: none;
   border-color: var(--color-blue-secondary);
+}
+.input_text::-webkit-outer-spin-button,
+.input_text::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 </style>

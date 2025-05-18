@@ -69,7 +69,7 @@ const navigation_blocks = reactive([
 }
 .menu_title {
   font-size: var(--large-font-size);
-  font-weight: 800;
+  font-weight: 700;
 }
 .menu_button img {
   display: block;

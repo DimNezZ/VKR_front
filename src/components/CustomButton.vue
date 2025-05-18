@@ -1,11 +1,11 @@
 <template>
   <button
-    type="button"
     class="button"
+    :type="type"
     :disabled="variant === 'unavailable'"
     :class="{
       button_unavailable: variant === 'unavailable',
-      button_reset: variant === 'reset',
+      button_danger: variant === 'danger',
     }"
     @click="emit('click', $event)"
   >
@@ -16,14 +16,16 @@
 <script setup>
 const emit = defineEmits(['click'])
 
-const props = defineProps({
+defineProps({
+  type: {
+    type: String,
+    default: 'button',
+  },
   variant: {
     type: String,
     default: 'default',
   },
 })
-
-// const { variant } = props
 </script>
 
 <style scoped>
@@ -54,7 +56,7 @@ const props = defineProps({
   background-color: var(--button-color-active);
 }
 
-.button.button_reset {
+.button.button_danger {
   --button-color: var(--color-tomato-primary);
   --button-color-hover: var(--color-tomato-primary);
   --button-color-focus: var(--color-tomato-primary);

@@ -4,4 +4,7 @@
 #app {
   margin: 0 auto;
   font-weight: normal;
+  min-height: 100vh;
+  display: grid;
+  grid-template-rows: max-content 1fr max-content;
 }
