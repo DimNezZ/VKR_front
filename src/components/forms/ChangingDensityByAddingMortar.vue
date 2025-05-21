@@ -2,21 +2,21 @@
   <FormWrapper @submit="handleSubmit">
     <InputGroup>
       <CustomInput
-        name="requiredDensity"
-        label="Необходимая плотность при смешивании растворов (г/см³)"
-        placeholder="0.0"
-      />
-      <CustomInput name="mortarVolume" label="Исходный объём раствора (м³)" placeholder="0.0" />
-    </InputGroup>
-    <InputGroup>
-      <CustomInput
-        name="mortarDensity"
-        label="Плотность исходного раствора (г/см³)"
+        name="densityChange"
+        label="Изменение плотности при добавлении раствора (м³)"
         placeholder="0.0"
       />
       <CustomInput
         name="mortarToAddedDensity"
         label="Плотность добавляемого раствора (г/см³)"
+        placeholder="0.0"
+      />
+    </InputGroup>
+    <InputGroup>
+      <CustomInput name="mortarVolume" label="Исходный объём раствора (м³)" placeholder="0" />
+      <CustomInput
+        name="mortarDensity"
+        label="Плотность исходного раствора (г/см³)"
         placeholder="0.0"
       />
     </InputGroup>
@@ -28,26 +28,26 @@ import FormWrapper from '@/components/FormWrapper.vue'
 import InputGroup from '@/components/InputGroup.vue'
 import CustomInput from '@/components/CustomInput.vue'
 import { getFormNumber } from '@/utils/getFormNumber.js'
-import { calculateMixingMortars } from '@/api/mixingMortars.js'
+import { calculateChangingDensityByAddingMortar } from '@/api/changingDensityByAddingMortar.js'
 
 /** @param {FormData} form */
 const handleSubmit = async (form) => {
-  const requiredDensity = getFormNumber(form.get('requiredDensity'))
+  const densityChange = getFormNumber(form.get('densityChange'))
   const mortarVolume = getFormNumber(form.get('mortarVolume'))
   const mortarDensity = getFormNumber(form.get('mortarDensity'))
   const mortarToAddedDensity = getFormNumber(form.get('mortarToAddedDensity'))
 
   if (
-    requiredDensity !== undefined &&
+    densityChange !== undefined &&
+    mortarToAddedDensity !== undefined &&
     mortarVolume !== undefined &&
-    mortarDensity !== undefined &&
-    mortarToAddedDensity !== undefined
+    mortarDensity !== undefined
   ) {
-    const response = await calculateMixingMortars(
-      requiredDensity,
+    const response = await calculateChangingDensityByAddingMortar(
+      densityChange,
+      mortarToAddedDensity,
       mortarVolume,
       mortarDensity,
-      mortarToAddedDensity,
     )
     console.log(response)
   } else {

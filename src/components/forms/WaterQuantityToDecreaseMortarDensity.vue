@@ -3,20 +3,19 @@
     <InputGroup>
       <CustomInput
         name="requiredDensity"
-        label="Необходимая плотность при смешивании растворов (г/см³)"
+        label="Необходимая плотность при добавлении раствора (г/см³)"
         placeholder="0.0"
       />
-      <CustomInput name="mortarVolume" label="Исходный объём раствора (м³)" placeholder="0.0" />
     </InputGroup>
     <InputGroup>
       <CustomInput
-        name="mortarDensity"
-        label="Плотность исходного раствора (г/см³)"
+        name="wellMortarVolume"
+        label="Объём раствора в скважине (50 м³)"
         placeholder="0.0"
       />
       <CustomInput
-        name="mortarToAddedDensity"
-        label="Плотность добавляемого раствора (г/см³)"
+        name="mortarDensity"
+        label="Плотность исходного раствора (г/см³)"
         placeholder="0.0"
       />
     </InputGroup>
@@ -28,26 +27,23 @@ import FormWrapper from '@/components/FormWrapper.vue'
 import InputGroup from '@/components/InputGroup.vue'
 import CustomInput from '@/components/CustomInput.vue'
 import { getFormNumber } from '@/utils/getFormNumber.js'
-import { calculateMixingMortars } from '@/api/mixingMortars.js'
+import { calculateWaterQuantityToDecreaseMortarDensity } from '@/api/waterQuantityToDecreaseMortarDensity.js'
 
 /** @param {FormData} form */
 const handleSubmit = async (form) => {
   const requiredDensity = getFormNumber(form.get('requiredDensity'))
-  const mortarVolume = getFormNumber(form.get('mortarVolume'))
+  const wellMortarVolume = getFormNumber(form.get('wellMortarVolume'))
   const mortarDensity = getFormNumber(form.get('mortarDensity'))
-  const mortarToAddedDensity = getFormNumber(form.get('mortarToAddedDensity'))
 
   if (
     requiredDensity !== undefined &&
-    mortarVolume !== undefined &&
-    mortarDensity !== undefined &&
-    mortarToAddedDensity !== undefined
+    wellMortarVolume !== undefined &&
+    mortarDensity !== undefined
   ) {
-    const response = await calculateMixingMortars(
+    const response = await calculateWaterQuantityToDecreaseMortarDensity(
       requiredDensity,
-      mortarVolume,
+      wellMortarVolume,
       mortarDensity,
-      mortarToAddedDensity,
     )
     console.log(response)
   } else {

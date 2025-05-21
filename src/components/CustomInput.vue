@@ -5,6 +5,7 @@
       :id="id"
       :type="type"
       :name="name"
+      :step="step"
       :placeholder="placeholder"
       :value="value"
       :disabled="variant === 'unavailable'"
@@ -34,6 +35,10 @@ defineProps({
   type: {
     type: String,
     default: 'number',
+  },
+  step: {
+    type: String,
+    default: 'any',
   },
   placeholder: {
     type: String,
@@ -65,7 +70,7 @@ defineProps({
   width: 180px;
   border-radius: var(--control-border-radius);
   border: var(--small-border);
-  padding: var(--medium-padding-x) var(--medium-padding-y);
+  padding: var(--medium-padding-y) var(--medium-padding-x);
   transition: 0.2s;
 }
 .input_label {

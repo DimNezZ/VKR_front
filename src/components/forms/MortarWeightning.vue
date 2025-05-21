@@ -3,7 +3,7 @@
     <InputGroup>
       <CustomInput
         name="requiredDensity"
-        label="Необходимая плотность при смешивании растворов (г/см³)"
+        label="Необходимая плотность при утяжелении раствора (г/см³)"
         placeholder="0.0"
       />
       <CustomInput name="mortarVolume" label="Исходный объём раствора (м³)" placeholder="0.0" />
@@ -15,8 +15,8 @@
         placeholder="0.0"
       />
       <CustomInput
-        name="mortarToAddedDensity"
-        label="Плотность добавляемого раствора (г/см³)"
+        name="weightingAgentSpecificGravity"
+        label="Удельный вес утяжелителя (г/см³)"
         placeholder="0.0"
       />
     </InputGroup>
@@ -28,26 +28,26 @@ import FormWrapper from '@/components/FormWrapper.vue'
 import InputGroup from '@/components/InputGroup.vue'
 import CustomInput from '@/components/CustomInput.vue'
 import { getFormNumber } from '@/utils/getFormNumber.js'
-import { calculateMixingMortars } from '@/api/mixingMortars.js'
+import { calculateMortarWeightning } from '@/api/mortarWeightning.js'
 
 /** @param {FormData} form */
 const handleSubmit = async (form) => {
   const requiredDensity = getFormNumber(form.get('requiredDensity'))
   const mortarVolume = getFormNumber(form.get('mortarVolume'))
   const mortarDensity = getFormNumber(form.get('mortarDensity'))
-  const mortarToAddedDensity = getFormNumber(form.get('mortarToAddedDensity'))
+  const weightingAgentSpecificGravity = getFormNumber(form.get('weightingAgentSpecificGravity'))
 
   if (
     requiredDensity !== undefined &&
     mortarVolume !== undefined &&
     mortarDensity !== undefined &&
-    mortarToAddedDensity !== undefined
+    weightingAgentSpecificGravity !== undefined
   ) {
-    const response = await calculateMixingMortars(
+    const response = await calculateMortarWeightning(
       requiredDensity,
       mortarVolume,
       mortarDensity,
-      mortarToAddedDensity,
+      weightingAgentSpecificGravity,
     )
     console.log(response)
   } else {

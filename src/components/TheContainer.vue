@@ -9,8 +9,9 @@
   max-width: 1180px;
   width: 100%;
   margin: 0 auto;
+  place-items: center;
   background-color: var(--color-white);
-  padding: 40px var(--large-padding-y);
+  padding: 40px var(--large-padding-x);
 }
 
 @media (max-width: 768px) {

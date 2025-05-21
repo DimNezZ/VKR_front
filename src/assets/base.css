@@ -18,14 +18,14 @@
   --large-font-size: 22px;
   --logo-font-size: 32px;
 
-  --small-padding-x: 5px;
-  --medium-padding-x: 10px;
-  --big-padding-x: 15px;
-  --large-padding-x: 20px;
   --small-padding-y: 5px;
   --medium-padding-y: 10px;
   --big-padding-y: 15px;
   --large-padding-y: 20px;
+  --small-padding-x: 5px;
+  --medium-padding-x: 10px;
+  --big-padding-x: 15px;
+  --large-padding-x: 20px;
 }
 
 *,
@@ -44,6 +44,7 @@ body {
   font-size: 15px;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent; /* Убирает фон при нажатии на телефоне */
   -moz-osx-font-smoothing: grayscale;
 }
 a {

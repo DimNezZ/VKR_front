@@ -37,7 +37,7 @@ defineProps({
 
   color: var(--color-white);
   background-color: var(--button-color);
-  padding: var(--medium-padding-x) 0;
+  padding: var(--medium-padding-y) 0;
   border-radius: var(--control-border-radius);
 
   display: flex;

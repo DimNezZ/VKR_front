@@ -11,7 +11,7 @@ export const parseNumber = (value) => {
     return value
   }
 
-  const parsedValue = parseInt(value, 10)
+  const parsedValue = parseFloat(value)
   if (Number.isNaN(parsedValue)) {
     return undefined
   }

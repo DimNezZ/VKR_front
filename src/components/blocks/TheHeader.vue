@@ -15,7 +15,10 @@ import TheLogo from '../TheLogo.vue'
   display: flex;
   justify-content: center;
   background-color: var(--color-blue-secondary);
-  padding: var(--medium-padding-x) 0;
+  padding: var(--medium-padding-y) 0;
+}
+.link {
+  display: flex;
 }
 .link:focus-visible {
   outline: 4px solid rgb(255 255 255 / 50%);

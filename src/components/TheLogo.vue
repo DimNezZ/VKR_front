@@ -27,7 +27,8 @@ defineProps({
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: var(--medium-padding-x) 35px;
+  width: 100%;
+  padding: var(--medium-padding-y) 35px;
   color: var(--color-black);
 }
 .image_container {
@@ -46,14 +47,14 @@ defineProps({
   font-weight: 800;
 }
 .copyright {
-  padding: 0 var(--medium-padding-y);
+  padding: 0 var(--medium-padding-x);
   font-size: var(--big-font-size);
   text-align: center;
 }
 
 @media (max-width: 768px) {
   .logo {
-    padding: var(--small-padding-x) var(--medium-padding-y);
+    padding: var(--small-padding-y) var(--medium-padding-x);
   }
   .image_container {
     min-width: 40px;
@@ -70,9 +71,6 @@ defineProps({
 }
 
 @media (max-width: 480px) {
-  .logo_wrapper {
-    max-width: 66%;
-  }
   .logo_title {
     font-size: var(--big-font-size);
   }

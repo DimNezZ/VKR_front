@@ -2,9 +2,12 @@
   <div class="footer_wrapper">
     <div class="left_column">
       <div class="field_container">
-        <ContactDataWrapper text="Томск, просп. Ленина, 30" />
-        <ContactDataWrapper text="TPUDrillSoft@mail.ru" />
-        <ContactDataWrapper text="+7 (999) 999-99-99" />
+        <ContactDataWrapper
+          href="https://2gis.ru/tomsk/search/%D0%A2%D0%9F%D0%A3%20%D0%B3%D0%BB%D0%B0%D0%B2%D0%BD%D1%8B%D0%B9/firm/423196012851308/84.950144%2C56.465419?m=84.956434%2C56.463892%2F15.82"
+          text="Томск, просп. Ленина, 30"
+        />
+        <ContactDataWrapper href="mailto:mail@htmlacademy.ru" text="TPUDrillSoft@mail.ru" />
+        <ContactDataWrapper href="tel:+79999999999" text="+7 (999) 999-99-99" />
       </div>
     </div>
 
@@ -14,8 +17,12 @@
 
     <div class="right_column">
       <div class="field_container">
-        <ContactDataWrapper text="Политика конфиденциальности" />
-        <ContactDataWrapper text="Условия пользования" />
+        <RouterLink to="/privacy-policy">
+          <ContactDataWrapper text="Политика конфиденциальности" />
+        </RouterLink>
+        <RouterLink to="/condition-of-use">
+          <ContactDataWrapper text="Условия пользования" />
+        </RouterLink>
       </div>
     </div>
   </div>
@@ -31,7 +38,7 @@ import TheLogo from '../TheLogo.vue'
   display: flex;
   align-items: center;
   background-color: var(--color-blue-secondary);
-  padding: var(--large-padding-x) 30px;
+  padding: var(--large-padding-y) 30px;
 }
 
 .left_column {
@@ -59,7 +66,7 @@ import TheLogo from '../TheLogo.vue'
 
 @media (max-width: 1480px) {
   .footer_wrapper {
-    padding: var(--large-padding-x) var(--large-padding-y);
+    padding: var(--large-padding-y) var(--large-padding-x);
     gap: 10px;
   }
   .left_column {
@@ -78,14 +85,14 @@ import TheLogo from '../TheLogo.vue'
 
 @media (max-width: 768px) {
   .footer_wrapper {
-    padding: var(--large-padding-x) var(--medium-padding-y);
+    padding: var(--large-padding-y) var(--medium-padding-x);
   }
 }
 
 @media (max-width: 560px) {
   .footer_wrapper {
     flex-direction: column;
-    padding: var(--medium-padding-x) 0;
+    padding: var(--medium-padding-y) 0;
   }
   .left_column {
     width: auto;

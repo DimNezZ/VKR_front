@@ -1,8 +1,10 @@
 <template>
   <div class="container_wrapper">
-    <div v-if="props.variant === 'bordered'" :title="title" class="group_title">{{ title }}</div>
-    <div class="input_container" :class="{ group_bordered: props.variant === 'bordered' }">
-      <slot></slot>
+    <div class="group_container">
+      <div v-if="props.variant === 'bordered'" :title="title" class="group_title">{{ title }}</div>
+      <div class="input_container" :class="{ group_bordered: props.variant === 'bordered' }">
+        <slot></slot>
+      </div>
     </div>
   </div>
 </template>
@@ -21,8 +23,12 @@ const props = defineProps({
 
 <style scoped>
 .container_wrapper {
+  width: 100%;
+}
+.group_container {
   display: flex;
   flex-direction: column;
+  width: fit-content;
   gap: 5px;
 }
 .group_title {
@@ -37,9 +43,13 @@ const props = defineProps({
 .input_container {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
   align-items: end;
-  gap: 15px;
-  padding: var(--big-padding-x) var(--medium-padding-y);
+  gap: 20px;
+  padding: var(--big-padding-y) var(--medium-padding-x);
+}
+@media (max-width: 480px) {
+  .group_title {
+    font-size: var(--small-font-size);
+  }
 }
 </style>

@@ -56,7 +56,7 @@ const navigation_blocks = reactive([
   flex-direction: column;
   gap: 8px;
   width: 360px;
-  padding: var(--medium-padding-x) var(--medium-padding-y);
+  padding: var(--medium-padding-y) var(--medium-padding-x);
   background-color: var(--color-blue-primary);
   border-radius: var(--control-border-radius);
 }
