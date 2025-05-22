@@ -1,9 +1,7 @@
 <template>
   <TheHeader></TheHeader>
   <TheContainer>
-    <LoaderWrapper>
-      <CementBridgeInstallation />
-    </LoaderWrapper>
+    <CementBridgeInstallation />
   </TheContainer>
   <TheFooter></TheFooter>
 </template>
@@ -12,6 +10,5 @@
 import TheHeader from '@/components/blocks/TheHeader.vue'
 import TheFooter from '@/components/blocks/TheFooter.vue'
 import TheContainer from '@/components/TheContainer.vue'
-import LoaderWrapper from '@/components/LoaderWrapper.vue'
 import CementBridgeInstallation from '@/components/forms/CementBridgeInstallation.vue'
 </script>

@@ -1,34 +1,53 @@
 <template>
-  <FormWrapper @submit="handleSubmit">
+  <LoaderWrapper>
+    <FormWrapper @submit="handleSubmit">
+      <InputGroup>
+        <CustomInput
+          name="requiredDensity"
+          label="Необходимая плотность при утяжелении раствора (г/см³)"
+          placeholder="0.0"
+        />
+        <CustomInput name="mortarVolume" label="Исходный объём раствора (м³)" placeholder="0.0" />
+      </InputGroup>
+      <InputGroup>
+        <CustomInput
+          name="mortarDensity"
+          label="Плотность исходного раствора (г/см³)"
+          placeholder="0.0"
+        />
+        <CustomInput
+          name="weightingAgentSpecificGravity"
+          label="Удельный вес утяжелителя (г/см³)"
+          placeholder="0.0"
+        />
+      </InputGroup>
+    </FormWrapper>
+  </LoaderWrapper>
+
+  <ResultWrapper v-if="result">
     <InputGroup>
-      <CustomInput
-        name="requiredDensity"
-        label="Необходимая плотность при утяжелении раствора (г/см³)"
-        placeholder="0.0"
-      />
-      <CustomInput name="mortarVolume" label="Исходный объём раствора (м³)" placeholder="0.0" />
+      <TextField caption="Необходимое количество утяжелителя:" unit="кг">
+        {{ result.weightingAgentWeight }}</TextField
+      >
+      <TextField caption="Конечный объём раствора:" unit="м³">
+        {{ result.finalMortarVolume }}</TextField
+      >
     </InputGroup>
-    <InputGroup>
-      <CustomInput
-        name="mortarDensity"
-        label="Плотность исходного раствора (г/см³)"
-        placeholder="0.0"
-      />
-      <CustomInput
-        name="weightingAgentSpecificGravity"
-        label="Удельный вес утяжелителя (г/см³)"
-        placeholder="0.0"
-      />
-    </InputGroup>
-  </FormWrapper>
+  </ResultWrapper>
 </template>
 
 <script setup>
 import FormWrapper from '@/components/FormWrapper.vue'
 import InputGroup from '@/components/InputGroup.vue'
 import CustomInput from '@/components/CustomInput.vue'
+import LoaderWrapper from '../LoaderWrapper.vue'
+import ResultWrapper from '../ResultWrapper.vue'
+import TextField from '../TextField.vue'
 import { getFormNumber } from '@/utils/getFormNumber.js'
 import { calculateMortarWeightning } from '@/api/mortarWeightning.js'
+import { ref } from 'vue'
+
+const result = ref(null)
 
 /** @param {FormData} form */
 const handleSubmit = async (form) => {
@@ -43,14 +62,14 @@ const handleSubmit = async (form) => {
     mortarDensity !== undefined &&
     weightingAgentSpecificGravity !== undefined
   ) {
-    const response = await calculateMortarWeightning(
+    result.value = await calculateMortarWeightning(
       requiredDensity,
       mortarVolume,
       mortarDensity,
       weightingAgentSpecificGravity,
     )
-    console.log(response)
   } else {
+    result.value = null
     console.log('Форма не заполнена')
   }
 }

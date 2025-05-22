@@ -6,10 +6,10 @@ import WaterQuantityToDecreaseMortarDensityPage from '@/pages/WaterQuantityToDec
 import MortarWeightningPage from '@/pages/MortarWeightningPage.vue'
 import WellVolumePage from '@/pages/WellVolumePage.vue'
 import GnpvPage from '@/pages/GnpvPage.vue'
-import CementBridgeInstallationOnBalance from '@/pages/CementBridgeInstallationOnBalance.vue'
 import CementBridgeInstallationPage from '@/pages/CementBridgeInstallationPage.vue'
 import PrivacyPolicyPage from '@/pages/PrivacyPolicyPage.vue'
 import ConditionOfUsePage from '@/pages/ConditionOfUsePage.vue'
+import CementBridgeInstallationOnBalancePage from '@/pages/CementBridgeInstallationOnBalancePage.vue'
 
 const routes = [
   { path: '/', component: NavigationPage },
@@ -26,7 +26,10 @@ const routes = [
   { path: '/well-volume', component: WellVolumePage },
   { path: '/gnpv', component: GnpvPage },
   { path: '/cement-bridge-installation', component: CementBridgeInstallationPage },
-  { path: '/cement-bridge-installation-on-balance', component: CementBridgeInstallationOnBalance },
+  {
+    path: '/cement-bridge-installation-on-balance',
+    component: CementBridgeInstallationOnBalancePage,
+  },
 ]
 
 export const router = createRouter({

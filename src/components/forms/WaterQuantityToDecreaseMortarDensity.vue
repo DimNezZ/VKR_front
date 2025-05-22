@@ -1,33 +1,50 @@
 <template>
-  <FormWrapper @submit="handleSubmit">
+  <LoaderWrapper>
+    <FormWrapper @submit="handleSubmit">
+      <InputGroup>
+        <CustomInput
+          name="requiredDensity"
+          label="Необходимая плотность при добавлении раствора (г/см³)"
+          placeholder="0.0"
+        />
+      </InputGroup>
+      <InputGroup>
+        <CustomInput
+          name="wellMortarVolume"
+          label="Объём раствора в скважине (50 м³)"
+          placeholder="0.0"
+        />
+        <CustomInput
+          name="mortarDensity"
+          label="Плотность исходного раствора (г/см³)"
+          placeholder="0.0"
+        />
+      </InputGroup>
+    </FormWrapper>
+  </LoaderWrapper>
+
+  <ResultWrapper v-if="result">
     <InputGroup>
-      <CustomInput
-        name="requiredDensity"
-        label="Необходимая плотность при добавлении раствора (г/см³)"
-        placeholder="0.0"
-      />
+      <TextField caption="Объём воды:" unit="м³"> {{ result.waterVolume }}</TextField>
+      <TextField caption="Конечный объём раствора:" unit="м³">
+        {{ result.finalMortarVolume }}</TextField
+      >
     </InputGroup>
-    <InputGroup>
-      <CustomInput
-        name="wellMortarVolume"
-        label="Объём раствора в скважине (50 м³)"
-        placeholder="0.0"
-      />
-      <CustomInput
-        name="mortarDensity"
-        label="Плотность исходного раствора (г/см³)"
-        placeholder="0.0"
-      />
-    </InputGroup>
-  </FormWrapper>
+  </ResultWrapper>
 </template>
 
 <script setup>
 import FormWrapper from '@/components/FormWrapper.vue'
 import InputGroup from '@/components/InputGroup.vue'
 import CustomInput from '@/components/CustomInput.vue'
+import LoaderWrapper from '../LoaderWrapper.vue'
+import ResultWrapper from '../ResultWrapper.vue'
+import TextField from '../TextField.vue'
 import { getFormNumber } from '@/utils/getFormNumber.js'
 import { calculateWaterQuantityToDecreaseMortarDensity } from '@/api/waterQuantityToDecreaseMortarDensity.js'
+import { ref } from 'vue'
+
+const result = ref(null)
 
 /** @param {FormData} form */
 const handleSubmit = async (form) => {
@@ -40,13 +57,13 @@ const handleSubmit = async (form) => {
     wellMortarVolume !== undefined &&
     mortarDensity !== undefined
   ) {
-    const response = await calculateWaterQuantityToDecreaseMortarDensity(
+    result.value = await calculateWaterQuantityToDecreaseMortarDensity(
       requiredDensity,
       wellMortarVolume,
       mortarDensity,
     )
-    console.log(response)
   } else {
+    result.value = null
     console.log('Форма не заполнена')
   }
 }

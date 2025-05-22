@@ -6,6 +6,9 @@
 
 <style scoped>
 .container {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
   max-width: 1180px;
   width: 100%;
   margin: 0 auto;
@@ -17,6 +20,7 @@
 @media (max-width: 768px) {
   .container {
     max-width: 720px;
+    gap: 20px;
   }
 }
 

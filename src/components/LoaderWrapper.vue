@@ -27,5 +27,6 @@ const appStore = useAppStore()
   position: absolute;
   inset: 0;
   background-color: rgb(0 0 0 / 25%);
+  border-radius: var(--control-border-radius);
 }
 </style>

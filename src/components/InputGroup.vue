@@ -34,6 +34,7 @@ const props = defineProps({
 .group_title {
   font-size: var(--medium-font-size);
   color: var(--color-black);
+  padding-left: var(--medium-padding-x);
 }
 .group_bordered {
   border-top: var(--small-border);
@@ -44,12 +45,16 @@ const props = defineProps({
   display: flex;
   flex-wrap: wrap;
   align-items: end;
-  gap: 20px;
+  gap: 40px;
   padding: var(--big-padding-y) var(--medium-padding-x);
 }
 @media (max-width: 480px) {
   .group_title {
     font-size: var(--small-font-size);
+  }
+  .input_container {
+    gap: 20px;
+    padding: var(--medium-padding-y) var(--medium-padding-x);
   }
 }
 </style>
