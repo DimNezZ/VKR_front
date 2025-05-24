@@ -6,7 +6,7 @@
           href="https://2gis.ru/tomsk/search/%D0%A2%D0%9F%D0%A3%20%D0%B3%D0%BB%D0%B0%D0%B2%D0%BD%D1%8B%D0%B9/firm/423196012851308/84.950144%2C56.465419?m=84.956434%2C56.463892%2F15.82"
           text="Томск, просп. Ленина, 30"
         />
-        <ContactDataWrapper href="mailto:mail@htmlacademy.ru" text="TPUDrillSoft@mail.ru" />
+        <ContactDataWrapper href="mailto:TPUDrillSoft@mail.ru" text="TPUDrillSoft@mail.ru" />
         <ContactDataWrapper href="tel:+79999999999" text="+7 (999) 999-99-99" />
       </div>
     </div>
@@ -17,10 +17,10 @@
 
     <div class="right_column">
       <div class="field_container">
-        <RouterLink to="/privacy-policy">
+        <RouterLink to="/privacy-policy" class="link">
           <ContactDataWrapper text="Политика конфиденциальности" />
         </RouterLink>
-        <RouterLink to="/condition-of-use">
+        <RouterLink to="/condition-of-use" class="link">
           <ContactDataWrapper text="Условия пользования" />
         </RouterLink>
       </div>
@@ -40,7 +40,13 @@ import TheLogo from '../TheLogo.vue'
   background-color: var(--color-blue-secondary);
   padding: var(--large-padding-y) 30px;
 }
-
+.link {
+  display: flex;
+}
+.link:focus-visible {
+  outline: 4px solid rgb(255 255 255 / 50%);
+  border-radius: var(--control-border-radius);
+}
 .left_column {
   display: flex;
   width: 38%;

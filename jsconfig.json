@@ -3,7 +3,8 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-    "module": "ESNext",
+    "module": "NodeNext",
+    "target": "ESNext",
     "checkJs": true,
     "moduleResolution": "nodenext"
   },

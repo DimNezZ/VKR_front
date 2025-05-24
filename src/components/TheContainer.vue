@@ -27,6 +27,7 @@
 @media (max-width: 480px) {
   .container {
     max-width: 450px;
+    padding: var(--large-padding-y) var(--big-padding-x);
   }
 }
 </style>
