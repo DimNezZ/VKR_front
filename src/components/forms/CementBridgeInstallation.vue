@@ -2,12 +2,19 @@
   <LoaderWrapper>
     <FormWrapper @submit="handleSubmit">
       <InputGroup title="Тип трубы" variant="bordered">
-        <RadioGroup v-model="pipeType" value="1" name="PipeType" label="Гладкопроходные трубы" />
+        <RadioGroup
+          v-model="pipeType"
+          value="1"
+          name="PipeType"
+          label="Гладкопроходные трубы"
+          id="1"
+        />
         <RadioGroup
           v-model="pipeType"
           value="0"
           name="PipeType"
           label="Трубы с внутрь высаженными концами"
+          id="2"
         />
       </InputGroup>
       <InputGroup>
@@ -17,6 +24,7 @@
           value="1"
           name="BufferFluid"
           label="Присутствие буферной жидкости"
+          id="3"
         />
       </InputGroup>
       <InputGroup>

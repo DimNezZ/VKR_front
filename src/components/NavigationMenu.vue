@@ -9,8 +9,10 @@
     <Transition name="roll_up">
       <div class="navigation_container" v-show="block.isOpen">
         <div class="menu_item" v-for="item in block.items" :key="item.id">
-          <div class="item_name">{{ item.name }}</div>
-          <div class="item_description">{{ item.description }}</div>
+          <RouterLink :to="item.path">
+            <div class="item_name">{{ item.name }}</div>
+            <div class="item_description">{{ item.description }}</div>
+          </RouterLink>
         </div>
       </div>
     </Transition>
@@ -20,34 +22,17 @@
 <script setup>
 import { reactive } from 'vue'
 
+const props = defineProps(['blocks'])
+
+const navigation_blocks = reactive(
+  props.blocks.map((block) => ({
+    ...block,
+    isOpen: block.isOpen ?? true,
+  })),
+)
 function toggleBlock(index) {
   navigation_blocks[index].isOpen = !navigation_blocks[index].isOpen
 }
-
-const navigation_blocks = reactive([
-  {
-    title: 'Название 1',
-    isOpen: true,
-    items: [
-      { id: 1, name: 'Название расчета 1', description: 'Описание для расчета 1' },
-      { id: 2, name: 'Название расчета 2', description: 'Описание' },
-    ],
-  },
-  {
-    title: 'Название 2',
-    isOpen: true,
-    items: [
-      {
-        id: 3,
-        name: 'Название расчета 3',
-        description: 'Длинное описание для расчета 3 Длинное описание для расчета 3',
-      },
-      { id: 4, name: 'Название расчета 4', description: 'Описание для расчета 3' },
-      { id: 5, name: 'Название расчета 4', description: 'Описание для расчета 5' },
-      { id: 6, name: 'Название расчета 4', description: 'Описание для расчета 6' },
-    ],
-  },
-])
 </script>
 
 <style scoped>

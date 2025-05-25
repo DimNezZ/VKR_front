@@ -82,10 +82,12 @@ function handleChange(event) {
   position: relative;
   transition: 0.3s;
 }
+.input_label {
+  cursor: pointer;
+}
 .radio:checked {
   border-color: var(--color-blue-secondary);
 }
-
 .radio::after {
   content: '';
   display: block;
@@ -99,11 +101,9 @@ function handleChange(event) {
   transition: opacity 0.2s;
   opacity: 0;
 }
-
 .radio:checked::after {
   opacity: 1;
 }
-
 .radio_unavailable {
   border-color: var(--input-color-unavailable);
   color: var(--input-color-unavailable);
