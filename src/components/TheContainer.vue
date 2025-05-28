@@ -34,6 +34,7 @@ defineProps({
   flex-direction: row;
   flex-wrap: wrap;
   align-items: start;
+  justify-content: space-between;
 }
 
 @media (max-width: 768px) {
@@ -41,6 +42,9 @@ defineProps({
     max-width: 720px;
     gap: 20px;
   }
+}
+.container_row {
+  justify-content: center;
 }
 
 @media (max-width: 480px) {

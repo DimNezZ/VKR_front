@@ -86,6 +86,7 @@ import TheLogo from '../TheLogo.vue'
   }
   .field_container {
     flex-direction: column;
+    align-items: center;
   }
 }
 

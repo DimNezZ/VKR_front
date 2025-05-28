@@ -2,14 +2,14 @@
   <LoaderWrapper>
     <FormWrapper @submit="handleSubmit">
       <InputGroup title="Тип трубы" variant="bordered">
-        <RadioGroup
+        <CustomRadio
           v-model="pipeType"
           value="1"
           name="PipeType"
           label="Гладкопроходные трубы"
           id="1"
         />
-        <RadioGroup
+        <CustomRadio
           v-model="pipeType"
           value="0"
           name="PipeType"
@@ -18,9 +18,8 @@
         />
       </InputGroup>
       <InputGroup>
-        <RadioGroup
+        <CustomCheckbox
           v-model="bufferFluid"
-          type="checkbox"
           value="1"
           name="BufferFluid"
           label="Присутствие буферной жидкости"
@@ -79,7 +78,8 @@
 import FormWrapper from '@/components/FormWrapper.vue'
 import InputGroup from '@/components/InputGroup.vue'
 import CustomInput from '@/components/CustomInput.vue'
-import RadioGroup from '../RadioGroup.vue'
+import CustomRadio from '../CustomRadio.vue'
+import CustomCheckbox from '../CustomCheckbox.vue'
 import LoaderWrapper from '../LoaderWrapper.vue'
 import ResultWrapper from '../ResultWrapper.vue'
 import TextField from '../TextField.vue'
