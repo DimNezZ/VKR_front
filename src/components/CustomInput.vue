@@ -10,9 +10,10 @@
       :value="value"
       :disabled="variant === 'unavailable'"
       class="input_text"
-      :class="{ input_unavailable: variant === 'unavailable' }"
+      :class="{ input_unavailable: variant === 'unavailable', input_error: error }"
       @input="emit('input', $event)"
     />
+    <div v-if="error" class="error_text">{{ error }}</div>
   </div>
 </template>
 
@@ -52,19 +53,23 @@ defineProps({
     type: String,
     default: 'default',
   },
+  error: {
+    type: [String, Number, Object],
+    default: '',
+  },
 })
 </script>
 
 <style scoped>
 .form_input {
   --input-color-unavailable: var(--color-silver);
-
   display: flex;
   flex-direction: column;
   gap: 8px;
   width: 230px;
   color: var(--color-black);
   font-size: var(--small-font-size);
+  position: relative;
 }
 .input_text {
   width: 180px;
@@ -88,5 +93,14 @@ defineProps({
 .input_text::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
+}
+.error_text {
+  position: absolute;
+  top: 100%;
+  color: var(--color-tomato-primary);
+}
+
+.input_error {
+  border-color: var(--color-tomato-primary);
 }
 </style>

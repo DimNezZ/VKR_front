@@ -6,11 +6,15 @@
           name="drillPipeLength"
           label="Длина бурильных труб или насосно-компрессорных труб (м)"
           placeholder="0.0"
+          v-model="form.drillPipeLength"
+          :error="errors.drillPipeLength"
         />
         <CustomInput
           name="cementBridgeHeight"
           label="Длина цементного моста (м)"
           placeholder="0.0"
+          v-model="form.cementBridgeHeight"
+          :error="errors.cementBridgeHeight"
         />
       </InputGroup>
       <InputGroup>
@@ -18,16 +22,22 @@
           name="runningVolumeCasingString"
           label="Погонный объём открытого ствола или обсадной колонны (м³/м)"
           placeholder="0.0"
+          v-model="form.runningVolumeCasingString"
+          :error="errors.runningVolumeCasingString"
         />
         <CustomInput
           name="runningVolumeInnerPipe"
           label="Погонный объём внутренней полости трубы (м³/м)"
           placeholder="0.0"
+          v-model="form.runningVolumeInnerPipe"
+          :error="errors.runningVolumeInnerPipe"
         />
         <CustomInput
           name="runningCapacityRing"
           label="Погонная вместимость кольца между скважиной и колонной (м³/м)"
           placeholder="0.0"
+          v-model="form.runningCapacityRing"
+          :error="errors.runningCapacityRing"
         />
       </InputGroup>
       <InputGroup>
@@ -35,11 +45,15 @@
           name="excessVolume"
           label="Избыточный объём для работы по цементированию (%)"
           placeholder="0"
+          v-model="form.excessVolume"
+          :error="errors.excessVolume"
         />
         <CustomInput
           name="buffer1Volume"
           label="Объём буфера, закачиваемый перед цементным мостом (м³)"
           placeholder="0.0"
+          v-model="form.buffer1Volume"
+          :error="errors.buffer1Volume"
         />
       </InputGroup>
     </FormWrapper>
@@ -70,43 +84,79 @@ import CustomInput from '@/components/CustomInput.vue'
 import LoaderWrapper from '../LoaderWrapper.vue'
 import ResultWrapper from '../ResultWrapper.vue'
 import TextField from '../TextField.vue'
-import { getFormNumber } from '@/utils/getFormNumber.js'
 import { calculateCementBridgeInstallationOnBalance } from '@/api/cementBridgeInstallationOnBalance.js'
-import { ref } from 'vue'
+import { reactive, ref } from 'vue'
+import { numberString } from '@/utils/zodParse.js'
+import { z } from 'zod'
 
 const result = ref()
+const form = reactive({
+  cementBridgeHeight: '',
+  runningVolumeCasingString: '',
+  excessVolume: '',
+  buffer1Volume: '',
+  runningCapacityRing: '',
+  runningVolumeInnerPipe: '',
+  drillPipeLength: '',
+})
+const errors = reactive({
+  cementBridgeHeight: '',
+  runningVolumeCasingString: '',
+  excessVolume: '',
+  buffer1Volume: '',
+  runningCapacityRing: '',
+  runningVolumeInnerPipe: '',
+  drillPipeLength: '',
+})
+
+const schema = z.object({
+  cementBridgeHeight: numberString(),
+  runningVolumeCasingString: numberString(),
+  excessVolume: numberString(),
+  buffer1Volume: numberString(),
+  runningCapacityRing: numberString(),
+  runningVolumeInnerPipe: numberString(),
+  drillPipeLength: numberString(),
+})
 
 /** @param {FormData} form */
 const handleSubmit = async (form) => {
-  const cementBridgeHeight = getFormNumber(form.get('cementBridgeHeight'))
-  const runningVolumeCasingString = getFormNumber(form.get('runningVolumeCasingString'))
-  const excessVolume = getFormNumber(form.get('excessVolume'))
-  const buffer1Volume = getFormNumber(form.get('buffer1Volume'))
-  const runningCapacityRing = getFormNumber(form.get('runningCapacityRing'))
-  const runningVolumeInnerPipe = getFormNumber(form.get('runningVolumeInnerPipe'))
-  const drillPipeLength = getFormNumber(form.get('drillPipeLength'))
+  errors.cementBridgeHeight = ''
+  errors.runningVolumeCasingString = ''
+  errors.excessVolume = ''
+  errors.buffer1Volume = ''
+  errors.runningCapacityRing = ''
+  errors.runningVolumeInnerPipe = ''
+  errors.drillPipeLength = ''
+  const formDataObj = Object.fromEntries(form.entries())
+  const parsed = schema.safeParse(formDataObj)
 
-  if (
-    cementBridgeHeight !== undefined &&
-    runningVolumeCasingString !== undefined &&
-    excessVolume !== undefined &&
-    buffer1Volume !== undefined &&
-    runningCapacityRing !== undefined &&
-    runningVolumeInnerPipe !== undefined &&
-    drillPipeLength !== undefined
-  ) {
-    result.value = await calculateCementBridgeInstallationOnBalance(
-      cementBridgeHeight,
-      runningVolumeCasingString,
-      excessVolume,
-      buffer1Volume,
-      runningCapacityRing,
-      runningVolumeInnerPipe,
-      drillPipeLength,
-    )
-  } else {
+  if (!parsed.success) {
+    for (const issue of parsed.error.issues) {
+      errors[issue.path[0]] = issue.message
+    }
     result.value = null
-    console.log('Форма не заполнена')
+    return
   }
+
+  const {
+    cementBridgeHeight,
+    runningVolumeCasingString,
+    excessVolume,
+    buffer1Volume,
+    runningCapacityRing,
+    runningVolumeInnerPipe,
+    drillPipeLength,
+  } = parsed.data
+
+  result.value = await calculateCementBridgeInstallationOnBalance(
+    cementBridgeHeight,
+    runningVolumeCasingString,
+    excessVolume,
+    buffer1Volume,
+    runningCapacityRing,
+    runningVolumeInnerPipe,
+    drillPipeLength,
+  )
 }
 </script>

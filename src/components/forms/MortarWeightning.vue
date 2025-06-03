@@ -6,19 +6,31 @@
           name="requiredDensity"
           label="Необходимая плотность при утяжелении раствора (г/см³)"
           placeholder="0.0"
+          v-model="form.requiredDensity"
+          :error="errors.requiredDensity"
         />
-        <CustomInput name="mortarVolume" label="Исходный объём раствора (м³)" placeholder="0.0" />
+        <CustomInput
+          name="mortarVolume"
+          label="Исходный объём раствора (м³)"
+          placeholder="0.0"
+          v-model="form.mortarVolume"
+          :error="errors.mortarVolume"
+        />
       </InputGroup>
       <InputGroup>
         <CustomInput
           name="mortarDensity"
           label="Плотность исходного раствора (г/см³)"
           placeholder="0.0"
+          v-model="form.mortarDensity"
+          :error="errors.mortarDensity"
         />
         <CustomInput
           name="weightingAgentSpecificGravity"
           label="Удельный вес утяжелителя (г/см³)"
           placeholder="0.0"
+          v-model="form.weightingAgentSpecificGravity"
+          :error="errors.weightingAgentSpecificGravity"
         />
       </InputGroup>
     </FormWrapper>
@@ -43,34 +55,57 @@ import CustomInput from '@/components/CustomInput.vue'
 import LoaderWrapper from '../LoaderWrapper.vue'
 import ResultWrapper from '../ResultWrapper.vue'
 import TextField from '../TextField.vue'
-import { getFormNumber } from '@/utils/getFormNumber.js'
 import { calculateMortarWeightning } from '@/api/mortarWeightning.js'
-import { ref } from 'vue'
+import { reactive, ref } from 'vue'
+import { numberString } from '@/utils/zodParse.js'
+import { z } from 'zod'
 
 const result = ref(null)
+const form = reactive({
+  requiredDensity: '',
+  mortarVolume: '',
+  mortarDensity: '',
+  weightingAgentSpecificGravity: '',
+})
+const errors = reactive({
+  requiredDensity: '',
+  mortarVolume: '',
+  mortarDensity: '',
+  weightingAgentSpecificGravity: '',
+})
+
+const schema = z.object({
+  requiredDensity: numberString(),
+  mortarVolume: numberString(),
+  mortarDensity: numberString(),
+  weightingAgentSpecificGravity: numberString(),
+})
 
 /** @param {FormData} form */
 const handleSubmit = async (form) => {
-  const requiredDensity = getFormNumber(form.get('requiredDensity'))
-  const mortarVolume = getFormNumber(form.get('mortarVolume'))
-  const mortarDensity = getFormNumber(form.get('mortarDensity'))
-  const weightingAgentSpecificGravity = getFormNumber(form.get('weightingAgentSpecificGravity'))
+  errors.requiredDensity = ''
+  errors.mortarVolume = ''
+  errors.mortarDensity = ''
+  errors.weightingAgentSpecificGravity = ''
+  const formDataObj = Object.fromEntries(form.entries())
+  const parsed = schema.safeParse(formDataObj)
 
-  if (
-    requiredDensity !== undefined &&
-    mortarVolume !== undefined &&
-    mortarDensity !== undefined &&
-    weightingAgentSpecificGravity !== undefined
-  ) {
-    result.value = await calculateMortarWeightning(
-      requiredDensity,
-      mortarVolume,
-      mortarDensity,
-      weightingAgentSpecificGravity,
-    )
-  } else {
+  if (!parsed.success) {
+    for (const issue of parsed.error.issues) {
+      errors[issue.path[0]] = issue.message
+    }
     result.value = null
-    console.log('Форма не заполнена')
+    return
   }
+
+  const { requiredDensity, mortarVolume, mortarDensity, weightingAgentSpecificGravity } =
+    parsed.data
+
+  result.value = await calculateMortarWeightning(
+    requiredDensity,
+    mortarVolume,
+    mortarDensity,
+    weightingAgentSpecificGravity,
+  )
 }
 </script>

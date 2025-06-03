@@ -6,6 +6,8 @@
           name="requiredDensity"
           label="Необходимая плотность при добавлении раствора (г/см³)"
           placeholder="0.0"
+          v-model="form.requiredDensity"
+          :error="errors.requiredDensity"
         />
       </InputGroup>
       <InputGroup>
@@ -13,11 +15,15 @@
           name="wellMortarVolume"
           label="Объём раствора в скважине (50 м³)"
           placeholder="0.0"
+          v-model="form.wellMortarVolume"
+          :error="errors.wellMortarVolume"
         />
         <CustomInput
           name="mortarDensity"
           label="Плотность исходного раствора (г/см³)"
           placeholder="0.0"
+          v-model="form.mortarDensity"
+          :error="errors.mortarDensity"
         />
       </InputGroup>
     </FormWrapper>
@@ -40,31 +46,51 @@ import CustomInput from '@/components/CustomInput.vue'
 import LoaderWrapper from '../LoaderWrapper.vue'
 import ResultWrapper from '../ResultWrapper.vue'
 import TextField from '../TextField.vue'
-import { getFormNumber } from '@/utils/getFormNumber.js'
 import { calculateWaterQuantityToDecreaseMortarDensity } from '@/api/waterQuantityToDecreaseMortarDensity.js'
-import { ref } from 'vue'
+import { reactive, ref } from 'vue'
+import { numberString } from '@/utils/zodParse.js'
+import { z } from 'zod'
 
 const result = ref(null)
+const form = reactive({
+  requiredDensity: '',
+  wellMortarVolume: '',
+  mortarDensity: '',
+})
+const errors = reactive({
+  requiredDensity: '',
+  wellMortarVolume: '',
+  mortarDensity: '',
+})
+
+const schema = z.object({
+  requiredDensity: numberString(),
+  wellMortarVolume: numberString(),
+  mortarDensity: numberString(),
+})
 
 /** @param {FormData} form */
 const handleSubmit = async (form) => {
-  const requiredDensity = getFormNumber(form.get('requiredDensity'))
-  const wellMortarVolume = getFormNumber(form.get('wellMortarVolume'))
-  const mortarDensity = getFormNumber(form.get('mortarDensity'))
+  errors.requiredDensity = ''
+  errors.wellMortarVolume = ''
+  errors.mortarDensity = ''
+  const formDataObj = Object.fromEntries(form.entries())
+  const parsed = schema.safeParse(formDataObj)
 
-  if (
-    requiredDensity !== undefined &&
-    wellMortarVolume !== undefined &&
-    mortarDensity !== undefined
-  ) {
-    result.value = await calculateWaterQuantityToDecreaseMortarDensity(
-      requiredDensity,
-      wellMortarVolume,
-      mortarDensity,
-    )
-  } else {
+  if (!parsed.success) {
+    for (const issue of parsed.error.issues) {
+      errors[issue.path[0]] = issue.message
+    }
     result.value = null
-    console.log('Форма не заполнена')
+    return
   }
+
+  const { requiredDensity, wellMortarVolume, mortarDensity } = parsed.data
+
+  result.value = await calculateWaterQuantityToDecreaseMortarDensity(
+    requiredDensity,
+    wellMortarVolume,
+    mortarDensity,
+  )
 }
 </script>

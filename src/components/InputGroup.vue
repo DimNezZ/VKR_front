@@ -46,7 +46,7 @@ const props = defineProps({
   flex-wrap: wrap;
   align-items: end;
   gap: 40px;
-  padding: var(--big-padding-y) var(--medium-padding-x);
+  padding: var(--large-padding-y) var(--medium-padding-x);
 }
 @media (max-width: 480px) {
   .group_title {

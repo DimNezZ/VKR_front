@@ -6,15 +6,25 @@
           name="OD"
           label="Наружный диаметр обсадной колонны или диаметр открытого ствола (мм)"
           placeholder="0.0"
+          v-model="form.OD"
+          :error="errors.OD"
         />
         <CustomInput
           name="ID"
           label="Внутренний диаметр бурильной колонны (мм)"
           placeholder="0.0"
+          v-model="form.ID"
+          :error="errors.ID"
         />
       </InputGroup>
       <InputGroup>
-        <CustomInput name="Lsec" label="Длина секции (м)" placeholder="0.0" />
+        <CustomInput
+          name="Lsec"
+          label="Длина секции (м)"
+          placeholder="0.0"
+          v-model="form.Lsec"
+          :error="errors.Lsec"
+        />
       </InputGroup>
     </FormWrapper>
   </LoaderWrapper>
@@ -37,18 +47,47 @@ import CustomInput from '@/components/CustomInput.vue'
 import ResultWrapper from '../ResultWrapper.vue'
 import LoaderWrapper from '../LoaderWrapper.vue'
 import TextField from '../TextField.vue'
-import { getFormNumber } from '@/utils/getFormNumber.js'
 import { calculateWellVolume } from '@/api/wellVolume.js'
-import { ref } from 'vue'
+import { reactive, ref } from 'vue'
+import { numberString } from '@/utils/zodParse.js'
+import { z } from 'zod'
 
 const result = ref(null)
+const form = reactive({
+  OD: '',
+  ID: '',
+  Lsec: '',
+})
+const errors = reactive({
+  OD: '',
+  ID: '',
+  Lsec: '',
+})
+
+const schema = z.object({
+  OD: numberString(),
+  ID: numberString(),
+  Lsec: numberString(),
+})
 
 //Почему есть необязательное поле и что в нем должно быть
 /** @param {FormData} form */
 const handleSubmit = async (form) => {
-  const OD = getFormNumber(form.get('OD'))
-  const ID = getFormNumber(form.get('ID'))
-  const Lsec = getFormNumber(form.get('Lsec'))
+  errors.OD = ''
+  errors.ID = ''
+  errors.Lsec = ''
+  const formDataObj = Object.fromEntries(form.entries())
+  const parsed = schema.safeParse(formDataObj)
+
+  if (!parsed.success) {
+    for (const issue of parsed.error.issues) {
+      errors[issue.path[0]] = issue.message
+    }
+    result.value = null
+    return
+  }
+
+  const { OD, ID, Lsec } = parsed.data
 
   if (ID !== undefined && Lsec !== undefined) {
     result.value = await calculateWellVolume(OD, ID, Lsec)
