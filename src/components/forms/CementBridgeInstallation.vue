@@ -1,6 +1,6 @@
 <template>
   <LoaderWrapper>
-    <FormWrapper @submit="handleSubmit">
+    <FormWrapper v-model="model" @submit="handleSubmit">
       <InputGroup title="Тип трубы" variant="bordered">
         <CustomRadio
           v-model="pipeType"
@@ -31,21 +31,21 @@
           name="internalPassageChannelArea"
           label="Внутренний проходной канал колонны труб (м²)"
           placeholder="0.0"
-          v-model="form.internalPassageChannelArea"
+          v-model="model.internalPassageChannelArea"
           :error="errors.internalPassageChannelArea"
         />
         <CustomInput
           name="bridgeHeight"
           label="Высота цементного моста (м)"
           placeholder="0.0"
-          v-model="form.bridgeHeight"
+          v-model="model.bridgeHeight"
           :error="errors.bridgeHeight"
         />
         <CustomInput
           name="internalPipeColumnVolume"
           label="Внутренний объём колонны труб (м³)"
           placeholder="0.0"
-          v-model="form.internalPipeColumnVolume"
+          v-model="model.internalPipeColumnVolume"
           :error="errors.internalPipeColumnVolume"
         />
       </InputGroup>
@@ -54,14 +54,14 @@
           name="crossSectionArea"
           label="Поперечное сечение скважины на участке установки цементного моста (м²)"
           placeholder="0"
-          v-model="form.crossSectionArea"
+          v-model="model.crossSectionArea"
           :error="errors.crossSectionArea"
         />
         <CustomInput
           name="ringSpaceArea"
           label="Кольцевое пространство между стенками скважины и колонной труб (м²)"
           placeholder="0.0"
-          v-model="form.ringSpaceArea"
+          v-model="model.ringSpaceArea"
           :error="errors.ringSpaceArea"
         />
       </InputGroup>
@@ -98,14 +98,15 @@ import LoaderWrapper from '../LoaderWrapper.vue'
 import ResultWrapper from '../ResultWrapper.vue'
 import TextField from '../TextField.vue'
 import { calculateCementBridgeInstallation } from '@/api/cementBridgeInstallation.js'
-import { reactive, ref } from 'vue'
-import { z } from 'zod'
-import { numberString } from '@/utils/zodParse.js'
+import { ref } from 'vue'
+import { z } from 'zod/v4'
+import { useValidation } from '@/utils/useValidation.js'
 
 const bufferFluid = ref('0')
 const pipeType = ref('')
 const result = ref(null)
-const form = reactive({
+
+const model = ref({
   bufferFluid: '',
   pipeType: '',
   crossSectionArea: '',
@@ -114,37 +115,21 @@ const form = reactive({
   bridgeHeight: '',
   internalPipeColumnVolume: '',
 })
-const errors = reactive({
-  crossSectionArea: '',
-  ringSpaceArea: '',
-  internalPassageChannelArea: '',
-  bridgeHeight: '',
-  internalPipeColumnVolume: '',
-})
-
 const schema = z.object({
-  crossSectionArea: numberString(),
-  ringSpaceArea: numberString(),
-  internalPassageChannelArea: numberString(),
-  bridgeHeight: numberString(),
-  internalPipeColumnVolume: numberString(),
+  crossSectionArea: z.coerce.number().positive('Обязательное поле'),
+  ringSpaceArea: z.coerce.number().positive('Обязательное поле'),
+  internalPassageChannelArea: z.coerce.number().positive('Обязательное поле'),
+  bridgeHeight: z.coerce.number().positive('Обязательное поле'),
+  internalPipeColumnVolume: z.coerce.number().positive('Обязательное поле'),
 })
 
-/** @param {FormData} form */
-const handleSubmit = async (form) => {
-  errors.crossSectionArea = ''
-  errors.ringSpaceArea = ''
-  errors.internalPassageChannelArea = ''
-  errors.bridgeHeight = ''
-  errors.internalPipeColumnVolume = ''
-  const formDataObj = Object.fromEntries(form.entries())
-  const parsed = schema.safeParse(formDataObj)
+const { errors, getData, validate } = useValidation(schema, model)
 
-  if (!parsed.success) {
-    for (const issue of parsed.error.issues) {
-      errors[issue.path[0]] = issue.message
-    }
+const handleSubmit = async () => {
+  if (!validate()) {
     result.value = null
+    console.log('Форма не заполнена')
+
     return
   }
 
@@ -154,8 +139,7 @@ const handleSubmit = async (form) => {
     internalPassageChannelArea,
     bridgeHeight,
     internalPipeColumnVolume,
-  } = parsed.data
-
+  } = getData()
   result.value = await calculateCementBridgeInstallation(
     +bufferFluid.value,
     +pipeType.value,
@@ -167,4 +151,3 @@ const handleSubmit = async (form) => {
   )
 }
 </script>
-<!-- const BufferFluid = getFormNumber(form.get('BufferFluid')) ?? 0 -->

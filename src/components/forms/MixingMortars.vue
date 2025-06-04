@@ -1,19 +1,19 @@
 <template>
   <LoaderWrapper>
-    <FormWrapper @submit="handleSubmit">
+    <FormWrapper v-model="model" @submit="handleSubmit">
       <InputGroup>
         <CustomInput
           name="requiredDensity"
           label="Необходимая плотность при смешивании растворов (г/см³)"
           placeholder="0.0"
-          v-model="form.requiredDensity"
+          v-model="model.requiredDensity"
           :error="errors.requiredDensity"
         />
         <CustomInput
           name="mortarVolume"
           label="Исходный объём раствора (м³)"
           placeholder="0.0"
-          v-model="form.mortarVolume"
+          v-model="model.mortarVolume"
           :error="errors.mortarVolume"
         />
       </InputGroup>
@@ -22,14 +22,14 @@
           name="mortarDensity"
           label="Плотность исходного раствора (г/см³)"
           placeholder="0.0"
-          v-model="form.mortarDensity"
+          v-model="model.mortarDensity"
           :error="errors.mortarDensity"
         />
         <CustomInput
           name="mortarToAddedDensity"
           label="Плотность добавляемого раствора (г/см³)"
           placeholder="0.0"
-          v-model="form.mortarToAddedDensity"
+          v-model="model.mortarToAddedDensity"
           :error="errors.mortarToAddedDensity"
         />
       </InputGroup>
@@ -56,50 +56,36 @@ import LoaderWrapper from '../LoaderWrapper.vue'
 import ResultWrapper from '../ResultWrapper.vue'
 import TextField from '../TextField.vue'
 import { calculateMixingMortars } from '@/api/mixingMortars.js'
-import { reactive, ref } from 'vue'
-import { numberString } from '@/utils/zodParse.js'
-import { z } from 'zod'
+import { z } from 'zod/v4'
+import { useValidation } from '@/utils/useValidation.js'
+import { ref } from 'vue'
 
 const result = ref(null)
-const form = reactive({
-  requiredDensity: '',
-  mortarVolume: '',
-  mortarDensity: '',
-  mortarToAddedDensity: '',
-})
-const errors = reactive({
-  requiredDensity: '',
-  mortarVolume: '',
-  mortarDensity: '',
-  mortarToAddedDensity: '',
-})
 
+const model = ref({
+  requiredDensity: '',
+  mortarVolume: '',
+  mortarDensity: '',
+  mortarToAddedDensity: '',
+})
 const schema = z.object({
-  requiredDensity: numberString(),
-  mortarVolume: numberString(),
-  mortarDensity: numberString(),
-  mortarToAddedDensity: numberString(),
+  requiredDensity: z.coerce.number().positive('Обязательное поле'),
+  mortarVolume: z.coerce.number().positive('Обязательное поле'),
+  mortarDensity: z.coerce.number().positive('Обязательное поле'),
+  mortarToAddedDensity: z.coerce.number().positive('Обязательное поле'),
 })
 
-/** @param {FormData} form */
-const handleSubmit = async (form) => {
-  errors.requiredDensity = ''
-  errors.mortarVolume = ''
-  errors.mortarDensity = ''
-  errors.mortarToAddedDensity = ''
-  const formDataObj = Object.fromEntries(form.entries())
-  const parsed = schema.safeParse(formDataObj)
+const { errors, getData, validate } = useValidation(schema, model)
 
-  if (!parsed.success) {
-    for (const issue of parsed.error.issues) {
-      errors[issue.path[0]] = issue.message
-    }
+const handleSubmit = async () => {
+  if (!validate()) {
     result.value = null
+    console.log('Форма не заполнена')
+
     return
   }
 
-  const { requiredDensity, mortarVolume, mortarDensity, mortarToAddedDensity } = parsed.data
-
+  const { requiredDensity, mortarVolume, mortarDensity, mortarToAddedDensity } = getData()
   result.value = await calculateMixingMortars(
     requiredDensity,
     mortarVolume,

@@ -1,12 +1,12 @@
 <template>
   <LoaderWrapper>
-    <FormWrapper @submit="handleSubmit">
+    <FormWrapper v-model="model" @submit="handleSubmit">
       <InputGroup>
         <CustomInput
           name="requiredDensity"
           label="Необходимая плотность при добавлении раствора (г/см³)"
           placeholder="0.0"
-          v-model="form.requiredDensity"
+          v-model="model.requiredDensity"
           :error="errors.requiredDensity"
         />
       </InputGroup>
@@ -15,14 +15,14 @@
           name="wellMortarVolume"
           label="Объём раствора в скважине (50 м³)"
           placeholder="0.0"
-          v-model="form.wellMortarVolume"
+          v-model="model.wellMortarVolume"
           :error="errors.wellMortarVolume"
         />
         <CustomInput
           name="mortarDensity"
           label="Плотность исходного раствора (г/см³)"
           placeholder="0.0"
-          v-model="form.mortarDensity"
+          v-model="model.mortarDensity"
           :error="errors.mortarDensity"
         />
       </InputGroup>
@@ -47,46 +47,34 @@ import LoaderWrapper from '../LoaderWrapper.vue'
 import ResultWrapper from '../ResultWrapper.vue'
 import TextField from '../TextField.vue'
 import { calculateWaterQuantityToDecreaseMortarDensity } from '@/api/waterQuantityToDecreaseMortarDensity.js'
-import { reactive, ref } from 'vue'
-import { numberString } from '@/utils/zodParse.js'
-import { z } from 'zod'
+import { ref } from 'vue'
+import { z } from 'zod/v4'
+import { useValidation } from '@/utils/useValidation.js'
 
 const result = ref(null)
-const form = reactive({
-  requiredDensity: '',
-  wellMortarVolume: '',
-  mortarDensity: '',
-})
-const errors = reactive({
-  requiredDensity: '',
-  wellMortarVolume: '',
-  mortarDensity: '',
-})
 
+const model = ref({
+  requiredDensity: '',
+  wellMortarVolume: '',
+  mortarDensity: '',
+})
 const schema = z.object({
-  requiredDensity: numberString(),
-  wellMortarVolume: numberString(),
-  mortarDensity: numberString(),
+  requiredDensity: z.coerce.number().positive('Обязательное поле'),
+  wellMortarVolume: z.coerce.number().positive('Обязательное поле'),
+  mortarDensity: z.coerce.number().positive('Обязательное поле'),
 })
 
-/** @param {FormData} form */
-const handleSubmit = async (form) => {
-  errors.requiredDensity = ''
-  errors.wellMortarVolume = ''
-  errors.mortarDensity = ''
-  const formDataObj = Object.fromEntries(form.entries())
-  const parsed = schema.safeParse(formDataObj)
+const { errors, getData, validate } = useValidation(schema, model)
 
-  if (!parsed.success) {
-    for (const issue of parsed.error.issues) {
-      errors[issue.path[0]] = issue.message
-    }
+const handleSubmit = async () => {
+  if (!validate()) {
     result.value = null
+    console.log('Форма не заполнена')
+
     return
   }
 
-  const { requiredDensity, wellMortarVolume, mortarDensity } = parsed.data
-
+  const { requiredDensity, wellMortarVolume, mortarDensity } = getData()
   result.value = await calculateWaterQuantityToDecreaseMortarDensity(
     requiredDensity,
     wellMortarVolume,

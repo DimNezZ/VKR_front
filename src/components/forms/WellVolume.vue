@@ -1,19 +1,19 @@
 <template>
   <LoaderWrapper>
-    <FormWrapper @submit="handleSubmit">
+    <FormWrapper v-model="model" @submit="handleSubmit">
       <InputGroup>
         <CustomInput
           name="OD"
           label="Наружный диаметр обсадной колонны или диаметр открытого ствола (мм)"
           placeholder="0.0"
-          v-model="form.OD"
+          v-model="model.OD"
           :error="errors.OD"
         />
         <CustomInput
           name="ID"
           label="Внутренний диаметр бурильной колонны (мм)"
           placeholder="0.0"
-          v-model="form.ID"
+          v-model="model.ID"
           :error="errors.ID"
         />
       </InputGroup>
@@ -22,7 +22,7 @@
           name="Lsec"
           label="Длина секции (м)"
           placeholder="0.0"
-          v-model="form.Lsec"
+          v-model="model.Lsec"
           :error="errors.Lsec"
         />
       </InputGroup>
@@ -48,52 +48,34 @@ import ResultWrapper from '../ResultWrapper.vue'
 import LoaderWrapper from '../LoaderWrapper.vue'
 import TextField from '../TextField.vue'
 import { calculateWellVolume } from '@/api/wellVolume.js'
-import { reactive, ref } from 'vue'
-import { numberString } from '@/utils/zodParse.js'
-import { z } from 'zod'
+import { ref } from 'vue'
+import { z } from 'zod/v4'
+import { useValidation } from '@/utils/useValidation.js'
 
 const result = ref(null)
-const form = reactive({
+const model = ref({
   OD: '',
   ID: '',
   Lsec: '',
 })
-const errors = reactive({
-  OD: '',
-  ID: '',
-  Lsec: '',
+const schema = z.object({
+  OD: z.coerce.number().positive('Обязательное поле'),
+  ID: z.coerce.number().positive('Обязательное поле'),
+  Lsec: z.coerce.number().positive('Обязательное поле'),
 })
 
-const schema = z.object({
-  OD: numberString(),
-  ID: numberString(),
-  Lsec: numberString(),
-})
+const { errors, getData, validate } = useValidation(schema, model)
 
 //Почему есть необязательное поле и что в нем должно быть
-/** @param {FormData} form */
-const handleSubmit = async (form) => {
-  errors.OD = ''
-  errors.ID = ''
-  errors.Lsec = ''
-  const formDataObj = Object.fromEntries(form.entries())
-  const parsed = schema.safeParse(formDataObj)
-
-  if (!parsed.success) {
-    for (const issue of parsed.error.issues) {
-      errors[issue.path[0]] = issue.message
-    }
+const handleSubmit = async () => {
+  if (!validate()) {
     result.value = null
+    console.log('Форма не заполнена')
+
     return
   }
 
-  const { OD, ID, Lsec } = parsed.data
-
-  if (ID !== undefined && Lsec !== undefined) {
-    result.value = await calculateWellVolume(OD, ID, Lsec)
-  } else {
-    result.value = null
-    console.log('Форма не заполнена')
-  }
+  const { OD, ID, Lsec } = getData()
+  result.value = await calculateWellVolume(OD, ID, Lsec)
 }
 </script>

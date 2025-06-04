@@ -1,10 +1,10 @@
 <template>
-  <form @submit.prevent="handleSubmit" class="form_wrapper">
+  <form @submit.prevent="handleSubmit" @reset.prevent="handleReset" class="form_wrapper">
     <div class="input_container">
       <slot></slot>
     </div>
     <div class="button_container">
-      <CustomButton type="reset" variant="danger" @click="emit('reset')">Сбросить</CustomButton>
+      <CustomButton type="reset" variant="danger">Сбросить</CustomButton>
       <CustomButton type="submit">Рассчитать</CustomButton>
     </div>
   </form>
@@ -13,10 +13,18 @@
 <script setup>
 import CustomButton from './CustomButton.vue'
 
-const emit = defineEmits(['submit', 'reset'])
+const emit = defineEmits(['submit', 'reset', 'update:modelValue'])
+const props = defineProps(['modelValue'])
 
 const handleSubmit = (event) => {
   emit('submit', new FormData(event.target))
+}
+const handleReset = () => {
+  emit('reset')
+  emit(
+    'update:modelValue',
+    Object.fromEntries(Object.keys(props.modelValue).map((key) => [key, ''])),
+  )
 }
 </script>
 

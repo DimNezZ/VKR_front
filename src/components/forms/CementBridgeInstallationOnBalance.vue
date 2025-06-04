@@ -1,19 +1,19 @@
 <template>
   <LoaderWrapper>
-    <FormWrapper @submit="handleSubmit">
+    <FormWrapper v-model="model" @submit="handleSubmit">
       <InputGroup>
         <CustomInput
           name="drillPipeLength"
           label="Длина бурильных труб или насосно-компрессорных труб (м)"
           placeholder="0.0"
-          v-model="form.drillPipeLength"
+          v-model="model.drillPipeLength"
           :error="errors.drillPipeLength"
         />
         <CustomInput
           name="cementBridgeHeight"
           label="Длина цементного моста (м)"
           placeholder="0.0"
-          v-model="form.cementBridgeHeight"
+          v-model="model.cementBridgeHeight"
           :error="errors.cementBridgeHeight"
         />
       </InputGroup>
@@ -22,21 +22,21 @@
           name="runningVolumeCasingString"
           label="Погонный объём открытого ствола или обсадной колонны (м³/м)"
           placeholder="0.0"
-          v-model="form.runningVolumeCasingString"
+          v-model="model.runningVolumeCasingString"
           :error="errors.runningVolumeCasingString"
         />
         <CustomInput
           name="runningVolumeInnerPipe"
           label="Погонный объём внутренней полости трубы (м³/м)"
           placeholder="0.0"
-          v-model="form.runningVolumeInnerPipe"
+          v-model="model.runningVolumeInnerPipe"
           :error="errors.runningVolumeInnerPipe"
         />
         <CustomInput
           name="runningCapacityRing"
           label="Погонная вместимость кольца между скважиной и колонной (м³/м)"
           placeholder="0.0"
-          v-model="form.runningCapacityRing"
+          v-model="model.runningCapacityRing"
           :error="errors.runningCapacityRing"
         />
       </InputGroup>
@@ -45,14 +45,14 @@
           name="excessVolume"
           label="Избыточный объём для работы по цементированию (%)"
           placeholder="0"
-          v-model="form.excessVolume"
+          v-model="model.excessVolume"
           :error="errors.excessVolume"
         />
         <CustomInput
           name="buffer1Volume"
           label="Объём буфера, закачиваемый перед цементным мостом (м³)"
           placeholder="0.0"
-          v-model="form.buffer1Volume"
+          v-model="model.buffer1Volume"
           :error="errors.buffer1Volume"
         />
       </InputGroup>
@@ -85,57 +85,38 @@ import LoaderWrapper from '../LoaderWrapper.vue'
 import ResultWrapper from '../ResultWrapper.vue'
 import TextField from '../TextField.vue'
 import { calculateCementBridgeInstallationOnBalance } from '@/api/cementBridgeInstallationOnBalance.js'
-import { reactive, ref } from 'vue'
-import { numberString } from '@/utils/zodParse.js'
-import { z } from 'zod'
+import { ref } from 'vue'
+import { z } from 'zod/v4'
+import { useValidation } from '@/utils/useValidation.js'
 
 const result = ref()
-const form = reactive({
-  cementBridgeHeight: '',
-  runningVolumeCasingString: '',
-  excessVolume: '',
-  buffer1Volume: '',
-  runningCapacityRing: '',
-  runningVolumeInnerPipe: '',
-  drillPipeLength: '',
-})
-const errors = reactive({
-  cementBridgeHeight: '',
-  runningVolumeCasingString: '',
-  excessVolume: '',
-  buffer1Volume: '',
-  runningCapacityRing: '',
-  runningVolumeInnerPipe: '',
-  drillPipeLength: '',
-})
 
+const model = ref({
+  cementBridgeHeight: '',
+  runningVolumeCasingString: '',
+  excessVolume: '',
+  buffer1Volume: '',
+  runningCapacityRing: '',
+  runningVolumeInnerPipe: '',
+  drillPipeLength: '',
+})
 const schema = z.object({
-  cementBridgeHeight: numberString(),
-  runningVolumeCasingString: numberString(),
-  excessVolume: numberString(),
-  buffer1Volume: numberString(),
-  runningCapacityRing: numberString(),
-  runningVolumeInnerPipe: numberString(),
-  drillPipeLength: numberString(),
+  cementBridgeHeight: z.coerce.number().positive('Обязательное поле'),
+  runningVolumeCasingString: z.coerce.number().positive('Обязательное поле'),
+  excessVolume: z.coerce.number().positive('Обязательное поле'),
+  buffer1Volume: z.coerce.number().positive('Обязательное поле'),
+  runningCapacityRing: z.coerce.number().positive('Обязательное поле'),
+  runningVolumeInnerPipe: z.coerce.number().positive('Обязательное поле'),
+  drillPipeLength: z.coerce.number().positive('Обязательное поле'),
 })
 
-/** @param {FormData} form */
-const handleSubmit = async (form) => {
-  errors.cementBridgeHeight = ''
-  errors.runningVolumeCasingString = ''
-  errors.excessVolume = ''
-  errors.buffer1Volume = ''
-  errors.runningCapacityRing = ''
-  errors.runningVolumeInnerPipe = ''
-  errors.drillPipeLength = ''
-  const formDataObj = Object.fromEntries(form.entries())
-  const parsed = schema.safeParse(formDataObj)
+const { errors, getData, validate } = useValidation(schema, model)
 
-  if (!parsed.success) {
-    for (const issue of parsed.error.issues) {
-      errors[issue.path[0]] = issue.message
-    }
+const handleSubmit = async () => {
+  if (!validate()) {
     result.value = null
+    console.log('Форма не заполнена')
+
     return
   }
 
@@ -147,8 +128,7 @@ const handleSubmit = async (form) => {
     runningCapacityRing,
     runningVolumeInnerPipe,
     drillPipeLength,
-  } = parsed.data
-
+  } = getData()
   result.value = await calculateCementBridgeInstallationOnBalance(
     cementBridgeHeight,
     runningVolumeCasingString,

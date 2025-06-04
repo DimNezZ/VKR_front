@@ -7,25 +7,25 @@
       :name="name"
       :step="step"
       :placeholder="placeholder"
-      :value="value"
+      :value="modelValue"
       :disabled="variant === 'unavailable'"
       class="input_text"
       :class="{ input_unavailable: variant === 'unavailable', input_error: error }"
-      @input="emit('input', $event)"
+      @input="handleInput"
     />
     <div v-if="error" class="error_text">{{ error }}</div>
   </div>
 </template>
 
 <script setup>
-const emit = defineEmits(['input'])
+const emit = defineEmits(['update:modelValue'])
 
 defineProps({
   id: {
     type: String,
     default: undefined,
   },
-  value: {
+  modelValue: {
     type: String,
     default: '',
   },
@@ -58,6 +58,15 @@ defineProps({
     default: '',
   },
 })
+
+/**
+ * @param {InputEvent} event
+ */
+const handleInput = (event) => {
+  if (event.currentTarget instanceof HTMLInputElement) {
+    emit('update:modelValue', event.currentTarget.value)
+  }
+}
 </script>
 
 <style scoped>
